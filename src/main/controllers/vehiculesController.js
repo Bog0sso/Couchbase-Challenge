@@ -31,19 +31,24 @@ module.exports.createVehicule = (req, res, next) => {
 
 
 
-//   module.exports.deleteVehicule_Id=(req,res,next)=>{
-//    
-//   };
+  module.exports.deleteVehicule_Id=(req,res,next)=>{
+  const bucket = cluster.bucket(process.env.BUCKET);
+  console.log(req.params.id+"#DEBUGGING REQUEST "+Date.UTC() )
+  let key=JSON.stringify(req.params.id)
+  bucket.scope(process.env.SCOPE).collection(process.env.COLLECTION).remove(key).catch(error=>error);
+
+  console.log("Vehicule deleted #DATABASE#")
+res.status(200).json({message:'vehicule deleted #BROWSER#'})
+  };
 
 
 
 module.exports.getVehicule_Id = (req, res, next) => {
   const bucket = cluster.bucket(process.env.BUCKET);
   
-  let vehicule= bucket.scope(process.env.SCOPE).collection(process.env.COLLECTION).get("2").value;
+  var vehicule= bucket.scope(process.env.SCOPE).collection(process.env.COLLECTION).get("3");
   console.log("Vehicule found #DATABASE#")
-  console.log(vehicule.then(value => res.status.json({value})))
-
+res.status(200).json({vehicule})
 };
 
 
